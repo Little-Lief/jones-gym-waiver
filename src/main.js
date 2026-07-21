@@ -5,6 +5,7 @@ import { getWaivers, saveWaiver, clearWaivers, exportWaiversAsJSON } from './sto
 import { checkPin, setPin } from './admin-auth.js';
 import { generateWaiverPdf, waiverPdfFilename } from './pdf.js';
 import { MONTHS, DAYS, dobYears, calculateAge, MIN_AGE, US_STATES, EMERGENCY_RELATIONS } from './form-options.js';
+import { sendWaiverNotification } from './email.js';
 
 const PIN_LENGTH = 4;
 
@@ -182,6 +183,7 @@ function renderForm() {
     };
     saveWaiver(waiver);
     generateWaiverPdf(waiver).save(waiverPdfFilename(waiver));
+    sendWaiverNotification(waiver).catch((err) => console.error('Waiver email notification failed:', err));
 
     renderThankYou(data.get('fullName'));
   });
