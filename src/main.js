@@ -366,4 +366,12 @@ function renderAdmin() {
   });
 }
 
+// Traps the Android hardware/gesture back button so it can't navigate away
+// from the kiosk - screen pinning alone only blocks home/recents, not
+// in-page browser-history navigation.
+history.pushState(null, '', location.href);
+window.addEventListener('popstate', () => {
+  history.pushState(null, '', location.href);
+});
+
 renderForm();
