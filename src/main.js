@@ -22,9 +22,15 @@ function renderForm() {
       <form id="waiver-form" class="waiver-form">
         <div class="field-row">
           <label>
-            Full Name
-            <input type="text" name="fullName" required autocomplete="off" />
+            First Name
+            <input type="text" name="firstName" required autocomplete="off" />
           </label>
+          <label>
+            Last Name
+            <input type="text" name="lastName" required autocomplete="off" />
+          </label>
+        </div>
+        <div class="field-row">
           <label class="dob-label">
             Date of Birth
             <div class="dob-row">
@@ -44,6 +50,10 @@ function renderForm() {
               </select>
             </div>
           </label>
+          <label>
+            Phone
+            <input type="tel" name="phone" required autocomplete="off" />
+          </label>
         </div>
         <div class="field-row" id="guardian-row" hidden>
           <label>
@@ -52,10 +62,6 @@ function renderForm() {
           </label>
         </div>
         <div class="field-row">
-          <label>
-            Phone
-            <input type="tel" name="phone" required autocomplete="off" />
-          </label>
           <label>
             Address
             <input type="text" name="address" required autocomplete="off" />
@@ -167,8 +173,9 @@ function renderForm() {
     }
     errorMsg.textContent = '';
 
+    const fullName = `${data.get('firstName')} ${data.get('lastName')}`.trim();
     const waiver = {
-      fullName: data.get('fullName'),
+      fullName,
       dob: `${dobYear}-${dobMonth}-${dobDay}`,
       guardianName: isMinor ? guardianName : '',
       phone: data.get('phone'),
@@ -185,7 +192,7 @@ function renderForm() {
     generateWaiverPdf(waiver).save(waiverPdfFilename(waiver));
     sendWaiverNotification(waiver).catch((err) => console.error('Waiver email notification failed:', err));
 
-    renderThankYou(data.get('fullName'));
+    renderThankYou(fullName);
   });
 
   setupAdminTrigger();
